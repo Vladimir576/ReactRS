@@ -1,0 +1,56 @@
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 24px 28px;
+  border-radius: 22px;
+  background: #f8fbff;
+  border: 1px solid rgba(15, 80, 255, 0.08);
+}
+
+.page-title {
+  max-width: 720px;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  color: #526b97;
+  font-size: 0.92rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.app-header h1 {
+  margin: 0 0 8px;
+  font-size: clamp(1.85rem, 2.5vw, 2.6rem);
+  line-height: 1.05;
+}
+
+.subtitle {
+  margin: 0;
+  color: #5c667e;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.error-trigger {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 14px;
+  background: #fff0f2;
+  color: #c42b5d;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(196, 43, 93, 0.1);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.error-trigger:hover {
+  transform: translateY(-1px);
+}
