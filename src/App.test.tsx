@@ -14,7 +14,7 @@ const fetchItemByIdMock = vi.mocked(fetchItemById);
 
 describe('App', () => {
   beforeEach(() => {
-    window.history.pushState({}, '', '/');
+    window.history.pushState({}, '', '/#/');
     localStorage.clear();
     fetchItemsMock.mockReset();
     fetchItemByIdMock.mockReset();
@@ -52,7 +52,7 @@ describe('App', () => {
 
   it('changes page and writes it to the URL', async () => {
     const user = userEvent.setup();
-    window.history.pushState({}, '', '/?page=2');
+    window.history.pushState({}, '', '/#/?page=2');
     fetchItemsMock.mockResolvedValue(items);
 
     render(<App />);
@@ -66,7 +66,7 @@ describe('App', () => {
       expect(fetchItemsMock).toHaveBeenLastCalledWith({ query: '', page: 3 });
     });
 
-    expect(window.location.search).toBe('?page=3');
+    expect(window.location.hash).toBe('#/?page=3');
   });
 
   it('opens and closes details panel', async () => {
@@ -84,7 +84,7 @@ describe('App', () => {
 
     await user.click(await screen.findByRole('link', { name: /Rick Sanchez/i }));
 
-    expect(window.location.pathname).toBe('/details/1');
+    expect(window.location.hash).toBe('#/details/1?page=1');
     expect(screen.getByText('Loading details...')).toBeInTheDocument();
 
     await act(async () => {
@@ -99,7 +99,7 @@ describe('App', () => {
 
     await user.click(screen.getByRole('button', { name: 'Close' }));
 
-    expect(window.location.pathname).toBe('/');
+    expect(window.location.hash).toBe('#/?page=1');
   });
 
   it('shows about page from navigation', async () => {
@@ -118,7 +118,7 @@ describe('App', () => {
   });
 
   it('shows not found page', () => {
-    window.history.pushState({}, '', '/unknown-page');
+    window.history.pushState({}, '', '/#/unknown-page');
     fetchItemsMock.mockResolvedValue(items);
 
     render(<App />);
