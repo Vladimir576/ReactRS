@@ -1,16 +1,13 @@
-import { Component, type ReactNode } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ErrorBoundary from './ErrorBoundary';
 
-class BrokenChild extends Component<{ shouldThrow: boolean }> {
-  render(): ReactNode {
-    if (this.props.shouldThrow) {
-      throw new Error('Broken child');
-    }
-
-    return null;
+function BrokenChild({ shouldThrow }: { shouldThrow: boolean }) {
+  if (shouldThrow) {
+    throw new Error('Broken child');
   }
+
+  return null;
 }
 
 describe('ErrorBoundary', () => {

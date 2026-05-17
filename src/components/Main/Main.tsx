@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Outlet } from 'react-router-dom';
 import type { Item } from '../../types/types';
 import Search from '../Search/Search';
 import CardList from '../CardList/CardList';
@@ -11,20 +11,37 @@ interface MainProps {
   items: Item[];
   onSearch: (searchTerm: string) => void;
   onRetry: () => void;
+  page: number;
+  onPageChange: (page: number) => void;
+  hasDetails: boolean;
 }
 
-export default class Main extends Component<MainProps> {
-  render() {
-    const { searchTerm, loading, errorMessage, items, onSearch } = this.props;
-    const hasItems = items.length > 0;
+export default function Main({
+  searchTerm,
+  loading,
+  errorMessage,
+  items,
+  onSearch,
+  onRetry,
+  page,
+  onPageChange,
+  hasDetails,
+}: MainProps) {
+  const hasItems = items.length > 0;
 
-    return (
-      <main className="main-content">
+  return (
+    <main className={`main-content ${hasDetails ? 'main-content-split' : ''}`}>
+      <div className="main-left">
         <section className="search-section">
           <div className="search-header">
-            <h2>Top controls</h2>
+            <h2>Who are you interested in?</h2>
           </div>
-          <Search value={searchTerm} loading={loading} onSearch={onSearch} />
+          <Search
+            key={searchTerm}
+            value={searchTerm}
+            loading={loading}
+            onSearch={onSearch}
+          />
         </section>
         <section className="results-section">
           <div className="results-header">
@@ -32,7 +49,7 @@ export default class Main extends Component<MainProps> {
           </div>
           {loading ? (
             <div className="status-panel">
-              <div className="spinner" aria-hidden="true"></div>
+              <div className="spinner"></div>
               <p>Loading results... please wait.</p>
             </div>
           ) : errorMessage ? (
@@ -42,11 +59,7 @@ export default class Main extends Component<MainProps> {
                 <h3>Something went wrong</h3>
                 <p>{errorMessage}</p>
               </div>
-              <button
-                type="button"
-                className="retry-button"
-                onClick={this.props.onRetry}
-              >
+              <button type="button" className="retry-button" onClick={onRetry}>
                 Try Again
               </button>
             </div>
@@ -58,8 +71,28 @@ export default class Main extends Component<MainProps> {
               <p>Try a different search term or clear the field.</p>
             </div>
           )}
+          {hasItems && !loading && (
+            <div className="pagination">
+              <button
+                type="button"
+                onClick={() => onPageChange(page - 1)}
+                disabled={page <= 1}
+              >
+                Previous
+              </button>
+              <span>Page {page}</span>
+              <button type="button" onClick={() => onPageChange(page + 1)}>
+                Next
+              </button>
+            </div>
+          )}
         </section>
-      </main>
-    );
-  }
+      </div>
+      {hasDetails && (
+        <section className="details-section">
+          <Outlet />
+        </section>
+      )}
+    </main>
+  );
 }
