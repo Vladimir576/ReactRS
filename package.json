@@ -1,5 +1,6 @@
 {
   "name": "class-components",
+  "homepage": "https://Vladimir576.github.io/ReactRS/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,11 +12,15 @@
     "test:coverage": "vitest run --coverage",
     "format:fix": "prettier --write .",
     "preview": "vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "predeploy": "npm run build" ,
+    "deploy": "gh-pages -d dist"
+
   },
   "dependencies": {
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.15.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
@@ -32,6 +37,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
+    "gh-pages": "^6.3.0",
     "globals": "^17.6.0",
     "husky": "^9.1.7",
     "jsdom": "^29.1.1",

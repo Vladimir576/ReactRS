@@ -15,7 +15,32 @@
   max-width: 720px;
 }
 
-.eyebrow {
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.main-nav {
+  display: flex;
+  gap: 10px;
+}
+
+.main-nav a {
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: #24406c;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.main-nav a.active {
+  background: #eaf0ff;
+  color: #255fff;
+}
+
+.subtitle {
   margin: 0 0 8px;
   color: #526b97;
   font-size: 0.92rem;
@@ -29,7 +54,7 @@
   line-height: 1.05;
 }
 
-.subtitle {
+.main-title {
   margin: 0;
   color: #5c667e;
   font-size: 1rem;

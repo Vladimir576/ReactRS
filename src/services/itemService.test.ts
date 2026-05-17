@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fetchItems } from './itemService';
+import { fetchItemById, fetchItems } from './itemService';
 
 const createResponse = (ok: boolean, status: number, payload: unknown): Response =>
   ({
@@ -33,6 +33,44 @@ describe('fetchItems', () => {
 
     await expect(fetchItems({ query: 'rick' })).rejects.toThrow(
       'Server returned an error while loading items.'
+    );
+  });
+});
+
+describe('fetchItemById', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('loads one character by id', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      createResponse(true, 200, {
+        id: 1,
+        name: 'Rick Sanchez',
+        status: 'Alive',
+        species: 'Human',
+        gender: 'Male',
+        image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
+      })
+    );
+
+    await expect(fetchItemById(1)).resolves.toEqual({
+      id: 1,
+      name: 'Rick Sanchez',
+      description: 'Human - Alive - Male',
+      image: 'https://rickandmortyapi.com/api/character/avatar/1.jpeg',
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://rickandmortyapi.com/api/character/1'
+    );
+  });
+
+  it('throws when details request fails', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(createResponse(false, 500, {}));
+
+    await expect(fetchItemById(1)).rejects.toThrow(
+      'Server returned an error while loading item details.'
     );
   });
 });

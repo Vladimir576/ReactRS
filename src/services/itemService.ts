@@ -11,6 +11,7 @@ interface RickAndMortyCharacter {
   status: string;
   species: string;
   gender: string;
+  image: string;
 }
 
 interface RickAndMortyResponse {
@@ -24,7 +25,16 @@ interface RickAndMortyResponse {
 }
 
 function buildDescription(character: RickAndMortyCharacter): string {
-  return `${character.species} • ${character.status} • ${character.gender}`;
+  return `${character.species} - ${character.status} - ${character.gender}`;
+}
+
+function makeItem(character: RickAndMortyCharacter): Item {
+  return {
+    id: character.id,
+    name: character.name,
+    description: buildDescription(character),
+    image: character.image,
+  };
 }
 
 export async function fetchItems(options: FetchOptions): Promise<Item[]> {
@@ -48,9 +58,16 @@ export async function fetchItems(options: FetchOptions): Promise<Item[]> {
   }
 
   const payload = (await response.json()) as RickAndMortyResponse;
-  return payload.results.map((character) => ({
-    id: character.id,
-    name: character.name,
-    description: buildDescription(character),
-  }));
+  return payload.results.map(makeItem);
+}
+
+export async function fetchItemById(id: number): Promise<Item> {
+  const response = await fetch(`https://rickandmortyapi.com/api/character/${id}`);
+
+  if (!response.ok) {
+    throw new Error('Server returned an error while loading item details.');
+  }
+
+  const character = (await response.json()) as RickAndMortyCharacter;
+  return makeItem(character);
 }

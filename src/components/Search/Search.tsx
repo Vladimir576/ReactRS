@@ -1,4 +1,4 @@
-import { Component, type SyntheticEvent, type ChangeEvent } from 'react';
+import { useState, type ChangeEvent, type SyntheticEvent } from 'react';
 import './Search.css';
 
 interface SearchProps {
@@ -7,54 +7,35 @@ interface SearchProps {
   onSearch: (searchTerm: string) => void;
 }
 
-interface SearchState {
-  inputValue: string;
-}
+export default function Search({ value, loading, onSearch }: SearchProps) {
+  const [inputValue, setInputValue] = useState(value);
 
-export default class Search extends Component<SearchProps, SearchState> {
-  state: SearchState = {
-    inputValue: this.props.value,
-  };
-
-  componentDidUpdate(prevProps: SearchProps) {
-    if (prevProps.value !== this.props.value) {
-      this.setState({ inputValue: this.props.value });
-    }
+  function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+    setInputValue(event.target.value);
   }
 
-  handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState({ inputValue: event.target.value });
-  };
-
-  handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
+  function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
-    this.props.onSearch(this.state.inputValue);
-  };
-
-  render() {
-    return (
-      <form className="search-form" onSubmit={this.handleSubmit} noValidate>
-        <label className="visually-hidden" htmlFor="search-input">
-          Search items
-        </label>
-        <input
-          id="search-input"
-          className="search-input"
-          type="search"
-          value={this.state.inputValue}
-          onChange={this.handleInputChange}
-          placeholder="Search for items..."
-          disabled={this.props.loading}
-          aria-label="Search items"
-        />
-        <button
-          className="search-button"
-          type="submit"
-          disabled={this.props.loading}
-        >
-          Search
-        </button>
-      </form>
-    );
+    onSearch(inputValue);
   }
+
+  return (
+    <form className="search-form" onSubmit={handleSubmit} noValidate>
+      <label className="visually-hidden" htmlFor="search-input">
+        Search items
+      </label>
+      <input
+        id="search-input"
+        className="search-input"
+        type="search"
+        value={inputValue}
+        onChange={handleInputChange}
+        placeholder="Search for items..."
+        disabled={loading}
+      />
+      <button className="search-button" type="submit" disabled={loading}>
+        Search
+      </button>
+    </form>
+  );
 }
