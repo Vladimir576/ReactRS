@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type SyntheticEvent } from 'react';
 import './Search.css';
 
 interface SearchProps {
@@ -14,7 +14,7 @@ export default function Search({ value, loading, onSearch }: SearchProps) {
     setInputValue(event.target.value);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
     onSearch(inputValue);
   }

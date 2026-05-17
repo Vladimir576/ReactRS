@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
   HashRouter,
-  Link,
   Route,
   Routes,
   useLocation,
@@ -13,7 +12,9 @@ import './App.css';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Header from './components/Header/Header';
 import Main from './components/Main/Main';
+import About from './pages/About';
 import Details from './pages/Details';
+import NotFound from './pages/NotFound';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { fetchItems } from './services/itemService';
 import type { Item } from './types/types';
@@ -128,32 +129,6 @@ function HomePage() {
   );
 }
 
-function AboutPage() {
-  return (
-    <main className="simple-page">
-      <h2>About this app</h2>
-      <p>An application created using React and main tools. Created by Vladimir</p>
-      <a
-        href="https://rs.school/courses/reactjs"
-        target="_blank"
-        rel="noreferrer"
-      >
-        RS School React course
-      </a>
-    </main>
-  );
-}
-
-function NotFoundPage() {
-  return (
-    <main className="simple-page">
-      <h2>404</h2>
-      <p>Page was not found.</p>
-      <Link to="/?page=1">Back to the app</Link>
-    </main>
-  );
-}
-
 function AppContent() {
   const [simulateError, setSimulateError] = useState(false);
 
@@ -165,8 +140,8 @@ function AppContent() {
           <Route path="/" element={<HomePage />}>
             <Route path="details/:detailsId" element={<Details />} />
           </Route>
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <ErrorTester active={simulateError} />
       </div>
