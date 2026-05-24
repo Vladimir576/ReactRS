@@ -1,60 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { fetchItemById } from '../services/itemService';
-import type { Item } from '../types/types';
+import { useItemDetails } from '../hooks/useItemDetails';
 
 export default function Details() {
-  const { detailsId } = useParams();
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const [item, setItem] = useState<Item | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const page = searchParams.get('page') || '1';
-  const id = Number(detailsId);
-  const wrongId = !Number.isInteger(id) || id < 1;
-
-  useEffect(() => {
-    if (wrongId) {
-      return;
-    }
-
-    let ignore = false;
-
-    async function loadDetails() {
-      setLoading(true);
-      setErrorMessage('');
-
-      try {
-        const loadedItem = await fetchItemById(id);
-
-        if (!ignore) {
-          setItem(loadedItem);
-          setLoading(false);
-        }
-      } catch {
-        if (!ignore) {
-          setItem(null);
-          setErrorMessage('Item details could not be loaded.');
-          setLoading(false);
-        }
-      }
-    }
-
-    void loadDetails();
-
-    return () => {
-      ignore = true;
-    };
-  }, [id, wrongId]);
-
-  function handleClose() {
-    navigate(`/?page=${page}`);
-  }
+  const { item, loading, errorMessage, wrongId, closeDetails } =
+    useItemDetails();
 
   return (
     <div className="details-panel">
-      <button type="button" className="details-close" onClick={handleClose}>
+      <button type="button" className="details-close" onClick={closeDetails}>
         Close
       </button>
       {wrongId ? (

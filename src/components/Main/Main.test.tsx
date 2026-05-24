@@ -9,11 +9,11 @@ const defaultProps = {
   loading: false,
   errorMessage: '',
   items,
+  page: 1,
+  hasDetails: false,
   onSearch: vi.fn(),
   onRetry: vi.fn(),
-  page: 1,
   onPageChange: vi.fn(),
-  hasDetails: false,
 };
 
 function renderMain(props = defaultProps) {

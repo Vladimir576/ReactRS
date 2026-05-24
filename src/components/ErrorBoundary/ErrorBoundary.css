@@ -2,8 +2,9 @@
   margin-top: 24px;
   padding: 28px;
   border-radius: 20px;
-  background: #fff4f8;
-  border: 1px solid #f5c4d9;
+  background: var(--app-danger-bg);
+  border: 1px solid var(--app-border);
+  color: var(--app-text);
   display: flex;
   gap: 18px;
   align-items: center;
@@ -12,10 +13,10 @@
 
 .retry-button {
   padding: 12px 20px;
-  border: 1px solid #d24d4d;
+  border: 1px solid var(--app-danger-text);
   border-radius: 14px;
-  background: #ffffff;
-  color: #a12020;
+  background: var(--app-panel);
+  color: var(--app-danger-text);
   font-weight: 600;
   cursor: pointer;
   transition: transform 0.2s ease;
