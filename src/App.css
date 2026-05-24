@@ -1,16 +1,54 @@
 .app-shell {
+  --app-bg: #f4f7ff;
+  --app-panel: #ffffff;
+  --app-card: #f8fbff;
+  --app-title: #0f234d;
+  --app-text: #1d2a42;
+  --app-muted: #505b76;
+  --app-subtle: #5c667e;
+  --app-border: rgba(15, 52, 102, 0.08);
+  --app-accent: #255fff;
+  --app-accent-bg: #eaf0ff;
+  --app-accent-soft: rgba(37, 95, 255, 0.2);
+  --app-danger-bg: #fff0f2;
+  --app-danger-text: #c42b5d;
+  --app-shadow: rgba(20, 47, 96, 0.08);
   min-height: 100vh;
-  width: min(1280px, 100%);
+  width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 24px;
   box-sizing: border-box;
+  color: var(--app-text);
+  background: var(--app-bg);
+}
+
+:root[data-theme='dark'] .app-shell {
+  background: var(--app-bg);
+}
+
+.app-shell.theme-dark {
+  --app-bg: #111827;
+  --app-panel: #1f2937;
+  --app-card: #243244;
+  --app-title: #f9fafb;
+  --app-text: #e5e7eb;
+  --app-muted: #cbd5e1;
+  --app-subtle: #b6c2d4;
+  --app-border: rgba(226, 232, 240, 0.15);
+  --app-accent: #7dd3fc;
+  --app-accent-bg: #123447;
+  --app-accent-soft: rgba(125, 211, 252, 0.35);
+  --app-danger-bg: #3f1d2a;
+  --app-danger-text: #fda4af;
+  --app-shadow: rgba(0, 0, 0, 0.28);
 }
 
 .simple-page {
   padding: 24px;
   border-radius: 18px;
-  background: #ffffff;
-  border: 1px solid rgba(15, 52, 102, 0.08);
+  background: var(--app-panel);
+  border: 1px solid var(--app-border);
 }
 
 .simple-page h2 {
@@ -22,7 +60,7 @@
 }
 
 .simple-page a {
-  color: #255fff;
+  color: var(--app-accent);
   font-weight: 600;
 }
 

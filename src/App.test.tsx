@@ -2,6 +2,7 @@ import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import { fetchItemById, fetchItems } from './services/itemService';
+import { useSelectedItemsStore } from './store/selectedItemsStore';
 import { items } from './test-utils/items';
 
 vi.mock('./services/itemService', () => ({
@@ -16,6 +17,9 @@ describe('App', () => {
   beforeEach(() => {
     window.history.pushState({}, '', '/#/');
     localStorage.clear();
+    vi.clearAllMocks();
+    vi.unstubAllGlobals();
+    useSelectedItemsStore.setState({ selectedItems: {} });
     fetchItemsMock.mockReset();
     fetchItemByIdMock.mockReset();
   });
@@ -82,7 +86,7 @@ describe('App', () => {
 
     render(<App />);
 
-    await user.click(await screen.findByRole('link', { name: /Rick Sanchez/i }));
+    await user.click(await screen.findByRole('button', { name: /Rick Sanchez/i }));
 
     expect(window.location.hash).toBe('#/details/1?page=1');
     expect(screen.getByText('Loading details...')).toBeInTheDocument();
@@ -102,6 +106,72 @@ describe('App', () => {
     expect(window.location.hash).toBe('#/?page=1');
   });
 
+  it('shows invalid details message for a wrong item id', async () => {
+    window.history.pushState({}, '', '/#/details/wrong-id?page=2');
+    fetchItemsMock.mockResolvedValue(items);
+
+    render(<App />);
+
+    expect(await screen.findByText('Item was not found.')).toBeInTheDocument();
+    expect(fetchItemByIdMock).not.toHaveBeenCalled();
+  });
+
+  it('shows details loading error when item details request fails', async () => {
+    const user = userEvent.setup();
+    fetchItemsMock.mockResolvedValue(items);
+    fetchItemByIdMock.mockRejectedValue(new Error('Details request failed'));
+
+    render(<App />);
+
+    await user.click(await screen.findByRole('button', { name: /Rick Sanchez/i }));
+
+    expect(await screen.findByText('Item details could not be loaded.')).toBeInTheDocument();
+  });
+
+  it('shows dashboard loading error and retries the request', async () => {
+    const user = userEvent.setup();
+    fetchItemsMock
+      .mockRejectedValueOnce(new Error('Dashboard request failed'))
+      .mockResolvedValueOnce(items);
+
+    render(<App />);
+
+    expect(await screen.findByText("Something went wrong. We couldn't process your request. Please try again later.")).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Try Again' }));
+
+    expect(await screen.findByText('Rick Sanchez')).toBeInTheDocument();
+    expect(fetchItemsMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('selects with checkbox without opening details', async () => {
+    const user = userEvent.setup();
+    fetchItemsMock.mockResolvedValue(items);
+
+    render(<App />);
+
+    await user.click(await screen.findByRole('checkbox', { name: 'Select Rick Sanchez' }));
+
+    expect(screen.getByRole('checkbox', { name: 'Select Rick Sanchez' })).toBeChecked();
+    expect(screen.getByText('1 selected')).toBeInTheDocument();
+    expect(fetchItemByIdMock).not.toHaveBeenCalled();
+    expect(window.location.hash).not.toContain('/details/');
+  });
+
+  it('opens details from card click without changing selection', async () => {
+    const user = userEvent.setup();
+    fetchItemsMock.mockResolvedValue(items);
+    fetchItemByIdMock.mockResolvedValue(items[0]);
+
+    render(<App />);
+
+    await user.click(await screen.findByRole('button', { name: /Rick Sanchez/i }));
+
+    expect(window.location.hash).toBe('#/details/1?page=1');
+    expect(screen.getByRole('checkbox', { name: 'Select Rick Sanchez' })).not.toBeChecked();
+    expect(screen.queryByText('1 selected')).not.toBeInTheDocument();
+  });
+
   it('shows about page from navigation', async () => {
     const user = userEvent.setup();
     fetchItemsMock.mockResolvedValue(items);
@@ -115,6 +185,97 @@ describe('App', () => {
       'href',
       'https://rs.school/courses/reactjs'
     );
+  });
+
+  it('keeps selected item after navigation and unselects it', async () => {
+    const user = userEvent.setup();
+    fetchItemsMock.mockResolvedValue(items);
+
+    render(<App />);
+
+    await user.click(await screen.findByRole('checkbox', { name: 'Select Rick Sanchez' }));
+
+    expect(screen.getByText('1 selected')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('link', { name: 'About' }));
+
+    expect(screen.getByText('1 selected')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Unselect all' }));
+
+    expect(screen.queryByText('1 selected')).not.toBeInTheDocument();
+  });
+
+  it('switches theme with context control', async () => {
+    const user = userEvent.setup();
+    fetchItemsMock.mockResolvedValue(items);
+
+    render(<App />);
+
+    await user.selectOptions(screen.getByLabelText('Theme'), 'dark');
+
+    expect(document.querySelector('.app-shell')).toHaveClass('theme-dark');
+  });
+
+  it('downloads selected items as csv', async () => {
+    const user = userEvent.setup();
+    const createdCsvBlobs: Blob[] = [];
+    const createdLinks: HTMLAnchorElement[] = [];
+    const createObjectURLMock = vi.fn((blob: Blob) => {
+      createdCsvBlobs.push(blob);
+
+      return 'blob:test';
+    });
+    const revokeObjectURLMock = vi.fn();
+    const clickMock = vi.fn();
+    const realCreateElement = document.createElement.bind(document);
+
+    fetchItemsMock.mockResolvedValue(items);
+    Object.defineProperty(URL, 'createObjectURL', {
+      value: createObjectURLMock,
+      configurable: true,
+    });
+    Object.defineProperty(URL, 'revokeObjectURL', {
+      value: revokeObjectURLMock,
+      configurable: true,
+    });
+    vi.spyOn(document, 'createElement').mockImplementation((tagName) => {
+      const element = realCreateElement(tagName);
+
+      if (tagName === 'a') {
+        const anchorElement = element as HTMLAnchorElement;
+
+        createdLinks.push(anchorElement);
+        anchorElement.click = clickMock;
+      }
+
+      return element;
+    });
+
+    render(<App />);
+
+    await user.click(await screen.findByRole('checkbox', { name: 'Select Rick Sanchez' }));
+    await user.click(screen.getByRole('button', { name: 'Download' }));
+
+    expect(createObjectURLMock).toHaveBeenCalledWith(expect.any(Blob));
+    const csvDownloadLink = createdLinks.find((link) => link.href === 'blob:test');
+
+    expect(csvDownloadLink?.download).toBe('1_items.csv');
+    expect(clickMock).toHaveBeenCalled();
+    expect(revokeObjectURLMock).toHaveBeenCalledWith('blob:test');
+
+    const csvBlob = createdCsvBlobs[0];
+
+    if (!csvBlob) {
+      throw new Error('CSV Blob was not created');
+    }
+
+    const csvText = await csvBlob.text();
+
+    expect(csvText).toContain('id,name,description,detailsUrl');
+    expect(csvText).toContain('"Rick Sanchez"');
+    expect(csvText).toContain('"Human - Alive - Male"');
+    expect(csvText).toContain('#/details/1');
   });
 
   it('shows not found page', () => {

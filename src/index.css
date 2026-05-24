@@ -23,13 +23,26 @@
 html,
 body,
 #root {
-  min-height: 100%;
+  min-height: 100vh;
 }
 
 body {
   margin: 0;
   background: #f4f7ff;
   color: #1d2a42;
+}
+
+:root[data-theme='light'] {
+  background: #f4f7ff;
+}
+
+:root[data-theme='dark'] {
+  background: #111827;
+}
+
+:root[data-theme='dark'] body {
+  background: #111827;
+  color: #e5e7eb;
 }
 
 button,
