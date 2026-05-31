@@ -7,6 +7,7 @@ import './Main.css';
 interface MainProps {
   searchTerm: string;
   loading: boolean;
+  refreshing: boolean;
   errorMessage: string;
   items: Item[];
   page: number;
@@ -19,6 +20,7 @@ interface MainProps {
 export default function Main({
   searchTerm,
   loading,
+  refreshing,
   errorMessage,
   items,
   page,
@@ -40,6 +42,7 @@ export default function Main({
           errorMessage={errorMessage}
           items={items}
           page={page}
+          refreshing={refreshing}
           onRetry={onRetry}
           onPageChange={onPageChange}
         />

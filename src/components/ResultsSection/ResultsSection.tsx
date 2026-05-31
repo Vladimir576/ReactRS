@@ -8,6 +8,7 @@ interface ResultsSectionProps {
   errorMessage: string;
   items: Item[];
   page: number;
+  refreshing: boolean;
   onRetry: () => void;
   onPageChange: (page: number) => void;
 }
@@ -17,6 +18,7 @@ export default function ResultsSection({
   errorMessage,
   items,
   page,
+  refreshing,
   onRetry,
   onPageChange,
 }: ResultsSectionProps) {
@@ -26,6 +28,14 @@ export default function ResultsSection({
     <section className="results-section">
       <div className="results-header">
         <h2>Results</h2>
+        <button
+          type="button"
+          className="refresh-button"
+          onClick={onRetry}
+          disabled={loading || refreshing}
+        >
+          {refreshing ? 'Refreshing...' : 'Refresh'}
+        </button>
       </div>
       <StatusWrapper
         errorMessage={errorMessage}

@@ -42,6 +42,9 @@ describe('App', () => {
     render(<App />);
 
     const input = await screen.findByRole('searchbox', { name: 'Search items' });
+    await waitFor(() => {
+      expect(input).toBeEnabled();
+    });
     await user.clear(input);
     await user.type(input, '  morty  ');
     await user.click(screen.getByRole('button', { name: 'Search' }));
@@ -71,6 +74,76 @@ describe('App', () => {
     });
 
     expect(window.location.hash).toBe('#/?page=3');
+  });
+
+  it('reuses cached list data when returning to a previously loaded page', async () => {
+    const user = userEvent.setup();
+    fetchItemsMock.mockResolvedValue(items);
+
+    render(<App />);
+
+    expect(await screen.findByText('Page 1')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Next' }));
+
+    await waitFor(() => {
+      expect(fetchItemsMock).toHaveBeenCalledWith({ query: '', page: 2 });
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Previous' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Page 1')).toBeInTheDocument();
+    });
+    expect(fetchItemsMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('reuses cached search query pages when returning to them', async () => {
+    const user = userEvent.setup();
+    fetchItemsMock.mockResolvedValue(items);
+
+    render(<App />);
+
+    const input = await screen.findByRole('searchbox', { name: 'Search items' });
+    await waitFor(() => {
+      expect(input).toBeEnabled();
+    });
+
+    await user.clear(input);
+    await user.type(input, 'rick');
+    await user.click(screen.getByRole('button', { name: 'Search' }));
+
+    await waitFor(() => {
+      expect(fetchItemsMock).toHaveBeenCalledWith({ query: 'rick', page: 1 });
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Next' }));
+
+    await waitFor(() => {
+      expect(fetchItemsMock).toHaveBeenCalledWith({ query: 'rick', page: 2 });
+    });
+
+    await user.click(screen.getByRole('button', { name: 'Previous' }));
+
+    await waitFor(() => {
+      expect(screen.getByText('Page 1')).toBeInTheDocument();
+    });
+    expect(fetchItemsMock).toHaveBeenCalledTimes(3);
+  });
+
+  it('manually refreshes list data by invalidating the active query', async () => {
+    const user = userEvent.setup();
+    fetchItemsMock.mockResolvedValue(items);
+
+    render(<App />);
+
+    expect(await screen.findByText('Rick Sanchez')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Refresh' }));
+
+    await waitFor(() => {
+      expect(fetchItemsMock).toHaveBeenCalledTimes(2);
+    });
   });
 
   it('opens and closes details panel', async () => {
@@ -104,6 +177,46 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: 'Close' }));
 
     expect(window.location.hash).toBe('#/?page=1');
+  });
+
+  it('reuses cached details data when reopening the same item', async () => {
+    const user = userEvent.setup();
+    fetchItemsMock.mockResolvedValue(items);
+    fetchItemByIdMock.mockResolvedValue(items[0]);
+
+    render(<App />);
+
+    await user.click(await screen.findByRole('button', { name: /Rick Sanchez/i }));
+    expect(await screen.findByText('ID: 1')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+    await user.click(await screen.findByRole('button', { name: /Rick Sanchez/i }));
+
+    expect(await screen.findByText('ID: 1')).toBeInTheDocument();
+    expect(fetchItemByIdMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('manually refreshes details data by invalidating the active details query', async () => {
+    const user = userEvent.setup();
+    fetchItemsMock.mockResolvedValue(items);
+    fetchItemByIdMock.mockResolvedValue(items[0]);
+
+    render(<App />);
+
+    await user.click(await screen.findByRole('button', { name: /Rick Sanchez/i }));
+    expect(await screen.findByText('ID: 1')).toBeInTheDocument();
+
+    const detailsRefreshButton = screen.getAllByRole('button', { name: 'Refresh' })[1];
+
+    if (!detailsRefreshButton) {
+      throw new Error('Details refresh button was not found');
+    }
+
+    await user.click(detailsRefreshButton);
+
+    await waitFor(() => {
+      expect(fetchItemByIdMock).toHaveBeenCalledTimes(2);
+    });
   });
 
   it('shows invalid details message for a wrong item id', async () => {
