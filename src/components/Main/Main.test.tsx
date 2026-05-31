@@ -7,6 +7,7 @@ import { items } from '../../test-utils/items';
 const defaultProps = {
   searchTerm: '',
   loading: false,
+  refreshing: false,
   errorMessage: '',
   items,
   page: 1,

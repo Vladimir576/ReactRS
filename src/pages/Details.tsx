@@ -1,14 +1,26 @@
 import { useItemDetails } from '../hooks/useItemDetails';
 
 export default function Details() {
-  const { item, loading, errorMessage, wrongId, closeDetails } =
+  const { item, loading, refreshing, errorMessage, wrongId, closeDetails, refreshDetails } =
     useItemDetails();
 
   return (
     <div className="details-panel">
-      <button type="button" className="details-close" onClick={closeDetails}>
-        Close
-      </button>
+      <div className="details-actions">
+        {!wrongId && (
+          <button
+            type="button"
+            className="refresh-button"
+            onClick={refreshDetails}
+            disabled={loading || refreshing}
+          >
+            {refreshing ? 'Refreshing...' : 'Refresh'}
+          </button>
+        )}
+        <button type="button" className="details-close" onClick={closeDetails}>
+          Close
+        </button>
+      </div>
       {wrongId ? (
         <p>Item was not found.</p>
       ) : loading ? (
