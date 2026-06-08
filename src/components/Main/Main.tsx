@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import type { Item } from '../../types/types';
+import ProfileFormsPanel from '../ProfileForms/ProfileFormsPanel';
 import ResultsSection from '../ResultsSection/ResultsSection';
 import SearchSection from '../SearchSection/SearchSection';
 import './Main.css';
@@ -32,6 +33,7 @@ export default function Main({
   return (
     <main className={`main-content ${hasDetails ? 'main-content-split' : ''}`}>
       <div className="main-left">
+        <ProfileFormsPanel />
         <SearchSection
           searchTerm={searchTerm}
           loading={loading}
