@@ -17,9 +17,9 @@
   max-height: min(900px, 92vh);
   overflow: auto;
   border-radius: 8px;
-  border: 1px solid var(--app-border);
-  background: var(--app-panel);
-  color: var(--app-text);
+  border: 1px solid var(--app-border, rgba(15, 52, 102, 0.12));
+  background: var(--app-panel, #ffffff);
+  color: var(--app-text, #1d2a42);
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
 }
 
@@ -32,12 +32,12 @@
   justify-content: space-between;
   gap: 16px;
   padding: 20px 24px;
-  border-bottom: 1px solid var(--app-border);
-  background: var(--app-panel);
+  border-bottom: 1px solid var(--app-border, rgba(15, 52, 102, 0.12));
+  background: var(--app-panel, #ffffff);
 }
 
 .modal-header h2 {
-  color: var(--app-title);
+  color: var(--app-title, #0f234d);
   font-size: 1.2rem;
 }
 
@@ -46,10 +46,10 @@
   width: 36px;
   height: 36px;
   place-items: center;
-  border: 1px solid var(--app-border);
+  border: 1px solid var(--app-border, rgba(15, 52, 102, 0.12));
   border-radius: 8px;
-  background: var(--app-card);
-  color: var(--app-text);
+  background: var(--app-card, #f8fbff);
+  color: var(--app-text, #1d2a42);
   cursor: pointer;
   font-weight: 700;
 }
