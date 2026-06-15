@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   selectAddSubmission,
@@ -29,6 +29,8 @@ export default function HookProfileForm({
   const countries = useProfileFormStore(selectCountries);
   const addSubmission = useProfileFormStore(selectAddSubmission);
   const [password, setPassword] = useState('');
+  const profileSchema = useMemo(() => createProfileSchema(countries), [countries]);
+  const resolver = useMemo(() => zodResolver(profileSchema), [profileSchema]);
   const {
     formState: { errors, isValid },
     handleSubmit,
@@ -38,7 +40,7 @@ export default function HookProfileForm({
   } = useForm<ProfileFormValues>({
     defaultValues: getDefaultProfileValues(),
     mode: 'onChange',
-    resolver: zodResolver(createProfileSchema(countries)),
+    resolver,
   });
 
   useEffect(() => {
@@ -68,6 +70,17 @@ export default function HookProfileForm({
     onSuccess();
   });
 
+  const handleImageInput = useCallback(
+    (file: File | null) => {
+      setValue('image', file, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    },
+    [setValue]
+  );
+
   return (
     <form className="profile-form" noValidate onSubmit={submitForm}>
       <ProfileFormFields
@@ -75,13 +88,7 @@ export default function HookProfileForm({
         errors={mapRHFErrors(errors)}
         password={password}
         register={register}
-        onImageInput={(file) =>
-          setValue('image', file, {
-            shouldDirty: true,
-            shouldTouch: true,
-            shouldValidate: true,
-          })
-        }
+        onImageInput={handleImageInput}
         onPasswordInput={setPassword}
       />
       <div className="profile-form-actions">

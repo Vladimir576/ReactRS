@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import type { Item } from '../../types/types';
 import CardList from '../CardList/CardList';
 import Pagination from '../Pagination/Pagination';
@@ -13,7 +14,7 @@ interface ResultsSectionProps {
   onPageChange: (page: number) => void;
 }
 
-export default function ResultsSection({
+function ResultsSection({
   loading,
   errorMessage,
   items,
@@ -57,3 +58,5 @@ export default function ResultsSection({
     </section>
   );
 }
+
+export default memo(ResultsSection);

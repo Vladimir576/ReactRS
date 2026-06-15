@@ -1,4 +1,4 @@
-import type { MouseEvent } from 'react';
+import { memo, useCallback, type MouseEvent } from 'react';
 import type { Item } from '../../types/types';
 import './Card.css';
 
@@ -8,10 +8,10 @@ interface CardProps {
   onSelectChange: () => void;
 }
 
-export default function Card({ item, checked, onSelectChange }: CardProps) {
-  function stopOpeningDetails(event: MouseEvent) {
+function Card({ item, checked, onSelectChange }: CardProps) {
+  const stopOpeningDetails = useCallback((event: MouseEvent) => {
     event.stopPropagation();
-  }
+  }, []);
 
   return (
     <article className="result-card">
@@ -30,3 +30,5 @@ export default function Card({ item, checked, onSelectChange }: CardProps) {
     </article>
   );
 }
+
+export default memo(Card);

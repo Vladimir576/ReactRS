@@ -1,4 +1,10 @@
-import type { ChangeEvent } from 'react';
+import {
+  memo,
+  useCallback,
+  useMemo,
+  type ChangeEvent,
+  type FormEvent,
+} from 'react';
 import type { UseFormRegister } from 'react-hook-form';
 import type { ProfileFieldName, ProfileFormValues } from '../../types/profileForm';
 import { genderOptions, getPasswordStrength } from '../../utils/profileValidation';
@@ -17,15 +23,15 @@ interface ErrorMessageProps {
   message?: string;
 }
 
-function ErrorMessage({ id, message }: ErrorMessageProps) {
+const ErrorMessage = memo(function ErrorMessage({ id, message }: ErrorMessageProps) {
   return (
     <p aria-live="polite" className="form-error" id={id}>
       {message ?? '\u00a0'}
     </p>
   );
-}
+});
 
-export default function ProfileFormFields({
+function ProfileFormFields({
   countries,
   errors,
   password,
@@ -33,16 +39,29 @@ export default function ProfileFormFields({
   onPasswordInput,
   onImageInput,
 }: ProfileFormFieldsProps) {
-  const strength = getPasswordStrength(password);
+  const strength = useMemo(() => getPasswordStrength(password), [password]);
+  const sortedCountries = useMemo(
+    () => [...countries].sort((firstCountry, secondCountry) =>
+      firstCountry.localeCompare(secondCountry)
+    ),
+    [countries]
+  );
   const passwordRegistration = register?.('password', {
     onChange: (event) => {
       onPasswordInput?.(String(event.target.value));
     },
   });
   const imageRegistration = onImageInput ? undefined : register?.('image');
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     onImageInput?.(event.target.files?.item(0) ?? null);
-  };
+  }, [onImageInput]);
+
+  const handlePasswordInput = useCallback(
+    (event: FormEvent<HTMLInputElement>) => {
+      onPasswordInput?.(event.currentTarget.value);
+    },
+    [onPasswordInput]
+  );
 
   return (
     <div className="profile-form-grid">
@@ -111,7 +130,7 @@ export default function ProfileFormFields({
           {...register?.('country')}
         />
         <datalist id="profile-countries">
-          {countries.map((country) => (
+          {sortedCountries.map((country) => (
             <option key={country} value={country} />
           ))}
         </datalist>
@@ -139,9 +158,7 @@ export default function ProfileFormFields({
           id="profile-password"
           name="password"
           type="password"
-          onInput={(event) =>
-            onPasswordInput?.((event.target as HTMLInputElement).value)
-          }
+          onInput={handlePasswordInput}
           {...passwordRegistration}
         />
         <ErrorMessage id="profile-password-error" message={errors.password} />
@@ -176,3 +193,5 @@ export default function ProfileFormFields({
     </div>
   );
 }
+
+export default memo(ProfileFormFields);

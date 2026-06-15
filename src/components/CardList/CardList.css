@@ -1,6 +1,7 @@
 .card-list {
-  display: grid;
-  gap: 18px;
+  position: relative;
+  height: min(476px, 70vh);
+  overflow-y: auto;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -8,6 +9,20 @@
 
 .card-list li {
   list-style: none;
+}
+
+.card-list-spacer {
+  width: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.card-list-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding-bottom: 18px;
 }
 
 .card-button {

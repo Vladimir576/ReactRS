@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import {
   useLocation,
   useMatch,
@@ -20,7 +20,10 @@ export function useDashboardItems() {
   const detailsMatch = useMatch('/details/:detailsId');
   const page = getPage(searchParams.get('page'));
   const [searchTerm, setSearchTerm] = useLocalStorage(STORAGE_KEY, '');
-  const itemsQueryKey = itemQueryKeys.list(searchTerm, page);
+  const itemsQueryKey = useMemo(
+    () => itemQueryKeys.list(searchTerm, page),
+    [page, searchTerm]
+  );
   const {
     data: items = [],
     isLoading,
@@ -38,28 +41,28 @@ export function useDashboardItems() {
     }
   }, [page, searchParams, setSearchParams]);
 
-  function handleSearch(value: string) {
+  const handleSearch = useCallback((value: string) => {
     const trimmedValue = value.trim();
 
     setSearchTerm(trimmedValue);
     navigate('/?page=1');
-  }
+  }, [navigate, setSearchTerm]);
 
-  function handleRetry() {
+  const handleRetry = useCallback(() => {
     void queryClient
       .invalidateQueries({ queryKey: itemsQueryKey, refetchType: 'none' })
       .then(() => {
         void refetch();
       });
-  }
+  }, [itemsQueryKey, queryClient, refetch]);
 
-  function handlePageChange(newPage: number) {
+  const handlePageChange = useCallback((newPage: number) => {
     if (newPage < 1) {
       return;
     }
 
     navigate(`${location.pathname}?page=${newPage}`);
-  }
+  }, [location.pathname, navigate]);
 
   return {
     searchTerm,

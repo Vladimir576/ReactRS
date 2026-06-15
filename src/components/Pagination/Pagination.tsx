@@ -1,3 +1,4 @@
+import { memo, useCallback } from 'react';
 import './Pagination.css';
 
 interface PaginationProps {
@@ -5,20 +6,30 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export default function Pagination({ page, onPageChange }: PaginationProps) {
+function Pagination({ page, onPageChange }: PaginationProps) {
+  const goToPreviousPage = useCallback(() => {
+    onPageChange(page - 1);
+  }, [onPageChange, page]);
+
+  const goToNextPage = useCallback(() => {
+    onPageChange(page + 1);
+  }, [onPageChange, page]);
+
   return (
     <div className="pagination">
       <button
         type="button"
-        onClick={() => onPageChange(page - 1)}
+        onClick={goToPreviousPage}
         disabled={page <= 1}
       >
         Previous
       </button>
       <span>Page {page}</span>
-      <button type="button" onClick={() => onPageChange(page + 1)}>
+      <button type="button" onClick={goToNextPage}>
         Next
       </button>
     </div>
   );
 }
+
+export default memo(Pagination);

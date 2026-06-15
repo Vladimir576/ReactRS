@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Outlet } from 'react-router-dom';
 import type { Item } from '../../types/types';
 import ProfileFormsPanel from '../ProfileForms/ProfileFormsPanel';
@@ -18,7 +19,7 @@ interface MainProps {
   onPageChange: (page: number) => void;
 }
 
-export default function Main({
+function Main({
   searchTerm,
   loading,
   refreshing,
@@ -57,3 +58,5 @@ export default function Main({
     </main>
   );
 }
+
+export default memo(Main);

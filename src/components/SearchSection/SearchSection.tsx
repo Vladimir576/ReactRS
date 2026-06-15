@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Search from '../Search/Search';
 
 interface SearchSectionProps {
@@ -6,7 +7,7 @@ interface SearchSectionProps {
   onSearch: (searchTerm: string) => void;
 }
 
-export default function SearchSection({
+function SearchSection({
   searchTerm,
   loading,
   onSearch,
@@ -25,3 +26,5 @@ export default function SearchSection({
     </section>
   );
 }
+
+export default memo(SearchSection);

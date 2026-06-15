@@ -1,4 +1,10 @@
-import { useState, type ChangeEvent, type SyntheticEvent } from 'react';
+import {
+  memo,
+  useCallback,
+  useState,
+  type ChangeEvent,
+  type SyntheticEvent,
+} from 'react';
 import './Search.css';
 
 interface SearchProps {
@@ -7,17 +13,17 @@ interface SearchProps {
   onSearch: (searchTerm: string) => void;
 }
 
-export default function Search({ value, loading, onSearch }: SearchProps) {
+function Search({ value, loading, onSearch }: SearchProps) {
   const [inputValue, setInputValue] = useState(value);
 
-  function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+  const handleInputChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
-  }
+  }, []);
 
-  function handleSubmit(event: SyntheticEvent<HTMLFormElement>) {
+  const handleSubmit = useCallback((event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     onSearch(inputValue);
-  }
+  }, [inputValue, onSearch]);
 
   return (
     <form className="search-form" onSubmit={handleSubmit} noValidate>
@@ -39,3 +45,5 @@ export default function Search({ value, loading, onSearch }: SearchProps) {
     </form>
   );
 }
+
+export default memo(Search);

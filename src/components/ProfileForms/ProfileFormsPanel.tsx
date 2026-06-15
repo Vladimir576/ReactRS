@@ -10,6 +10,11 @@ type ActiveForm = 'uncontrolled' | 'hook' | null;
 export default function ProfileFormsPanel() {
   const [activeForm, setActiveForm] = useState<ActiveForm>(null);
   const closeModal = useCallback(() => setActiveForm(null), []);
+  const openUncontrolledForm = useCallback(
+    () => setActiveForm('uncontrolled'),
+    []
+  );
+  const openHookForm = useCallback(() => setActiveForm('hook'), []);
 
   return (
     <section className="forms-section" aria-labelledby="forms-section-title">
@@ -22,14 +27,14 @@ export default function ProfileFormsPanel() {
           <button
             className="secondary-button"
             type="button"
-            onClick={() => setActiveForm('uncontrolled')}
+            onClick={openUncontrolledForm}
           >
             Open uncontrolled form
           </button>
           <button
             className="primary-button"
             type="button"
-            onClick={() => setActiveForm('hook')}
+            onClick={openHookForm}
           >
             Open React Hook Form
           </button>

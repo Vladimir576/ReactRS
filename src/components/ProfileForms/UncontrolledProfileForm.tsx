@@ -1,4 +1,4 @@
-import { type FormEvent, useState } from 'react';
+import { useCallback, type FormEvent, useState } from 'react';
 import {
   selectAddSubmission,
   selectCountries,
@@ -46,7 +46,7 @@ export default function UncontrolledProfileForm({
   const [password, setPassword] = useState('');
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback(async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -80,7 +80,7 @@ export default function UncontrolledProfileForm({
     setSelectedImage(null);
     setErrors({});
     onSuccess();
-  };
+  }, [addSubmission, countries, onSuccess, selectedImage]);
 
   return (
     <form className="profile-form" noValidate onSubmit={handleSubmit}>
