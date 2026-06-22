@@ -1,0 +1,44 @@
+.status-error {
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 240px;
+  padding: 26px 24px;
+  background: rgba(255, 237, 237, 0.8);
+  border: 1px solid #f3c1c1;
+  border-radius: 20px;
+  color: #7a1720;
+}
+
+.status-error-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(229, 118, 118, 0.18);
+  color: #c12a2a;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+.status-error h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #58151c;
+}
+
+.status-error p {
+  margin: 0;
+  color: #6a2830;
+  line-height: 1.75;
+}
+
+.status-error .retry-button {
+  margin-top: 12px;
+  align-self: flex-end;
+  background: #ffffff;
+  border: 1px solid #d24d4d;
+  color: #a12020;
+  padding: 10px 16px;
+}

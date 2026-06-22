@@ -1,0 +1,46 @@
+.selected-flyout {
+  position: sticky;
+  bottom: 16px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 14px 18px;
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  background: var(--app-panel);
+  box-shadow: 0 16px 36px var(--app-shadow);
+}
+
+.selected-flyout p {
+  font-weight: 700;
+  color: var(--app-title);
+}
+
+.selected-flyout-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.selected-flyout button {
+  padding: 9px 14px;
+  border: 1px solid var(--app-accent-soft);
+  border-radius: 8px;
+  background: var(--app-accent-bg);
+  color: var(--app-accent);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 520px) {
+  .selected-flyout {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .selected-flyout-actions {
+    flex-direction: column;
+  }
+}

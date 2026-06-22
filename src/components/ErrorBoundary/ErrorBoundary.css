@@ -1,0 +1,34 @@
+.boundary-fallback {
+  margin-top: 24px;
+  padding: 28px;
+  border-radius: 20px;
+  background: var(--app-danger-bg);
+  border: 1px solid var(--app-border);
+  color: var(--app-text);
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.retry-button {
+  padding: 12px 20px;
+  border: 1px solid var(--app-danger-text);
+  border-radius: 14px;
+  background: var(--app-panel);
+  color: var(--app-danger-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.retry-button:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 840px) {
+  .boundary-fallback {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

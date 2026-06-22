@@ -1,0 +1,45 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "about": "Acerca de"
+  },
+  "header": {
+    "subtitle": "Impulsado por React",
+    "title": "Búsqueda de Personajes",
+    "description": "Utilice el campo de búsqueda para encontrar información sobre el personaje que le interesa."
+  },
+  "theme": {
+    "label": "Tema",
+    "light": "Claro",
+    "dark": "Oscuro"
+  },
+  "errors": {
+    "trigger": "Simular Error de Aplicación",
+    "loadFailed": "Error al cargar los elementos. Por favor, intente de nuevo.",
+    "itemNotFound": "El elemento no fue encontrado."
+  },
+  "search": {
+    "placeholder": "Buscar personaje...",
+    "button": "Buscar"
+  },
+  "details": {
+    "refresh": "Actualizar",
+    "refreshing": "Actualizando...",
+    "close": "Cerrar",
+    "loading": "Cargando detalles..."
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página"
+  },
+  "export": {
+    "csv": "Exportar como CSV",
+    "exporting": "Exportando..."
+  },
+  "about": {
+    "title": "Acerca de esta aplicación",
+    "description": "Una aplicación creada con React y las herramientas principales. Creada por Vladimir",
+    "courseLink": "Curso de React de RS School"
+  }
+}
