@@ -1,4 +1,3 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fetchItemById, fetchItems } from './itemService';
 
 const createResponse = (ok: boolean, status: number, payload: unknown): Response =>
