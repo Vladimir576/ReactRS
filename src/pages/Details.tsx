@@ -1,8 +1,16 @@
+'use client';
+
+import Image from 'next/image';
 import { useItemDetails } from '../hooks/useItemDetails';
 
-export default function Details() {
-  const { item, loading, refreshing, errorMessage, wrongId, closeDetails, refreshDetails } =
-    useItemDetails();
+interface DetailsProps {
+  itemId: number;
+  onClose: () => void;
+}
+
+export default function Details({ itemId, onClose }: DetailsProps) {
+  const { item, loading, refreshing, errorMessage, wrongId, refreshDetails } =
+    useItemDetails(itemId);
 
   return (
     <div className="details-panel">
@@ -17,7 +25,7 @@ export default function Details() {
             {refreshing ? 'Refreshing...' : 'Refresh'}
           </button>
         )}
-        <button type="button" className="details-close" onClick={closeDetails}>
+        <button type="button" className="details-close" onClick={onClose}>
           Close
         </button>
       </div>
@@ -32,7 +40,13 @@ export default function Details() {
         <p>{errorMessage}</p>
       ) : item ? (
         <article>
-          <img className="details-image" src={item.image} alt={item.name} />
+          <Image
+            className="details-image"
+            src={item.image}
+            alt={item.name}
+            width={200}
+            height={200}
+          />
           <h2>{item.name}</h2>
           <p>{item.description}</p>
           <p>ID: {item.id}</p>

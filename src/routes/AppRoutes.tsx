@@ -1,17 +1,7 @@
-import { Route, Routes } from 'react-router-dom';
-import About from '../pages/About';
-import Details from '../pages/Details';
-import HomePage from '../pages/HomePage';
-import NotFound from '../pages/NotFound';
+// This file is no longer used in the Next.js App Router setup
+// The app now uses file-based routing with the app/ directory structure
+// Routes are defined by the file structure:
+// - app/[locale]/page.tsx -> home page
+// - app/[locale]/about/page.tsx -> about page
+// - app/[locale]/not-found.tsx -> 404 page
 
-export default function AppRoutes() {
-  return (
-    <Routes>
-      <Route path="/" element={<HomePage />}>
-        <Route path="details/:detailsId" element={<Details />} />
-      </Route>
-      <Route path="/about" element={<About />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  );
-}

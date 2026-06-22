@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import CardList from './CardList';
 import { items } from '../../test-utils/items';
 import { useSelectedItemsStore } from '../../store/selectedItemsStore';
@@ -11,9 +10,7 @@ describe('CardList', () => {
 
   it('renders all provided items', () => {
     render(
-      <MemoryRouter>
-        <CardList items={items} />
-      </MemoryRouter>
+      <CardList items={items} onSelectItem={() => {}} />
     );
 
     expect(screen.getAllByRole('listitem')).toHaveLength(2);

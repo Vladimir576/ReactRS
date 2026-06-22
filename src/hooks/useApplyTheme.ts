@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from 'react';
 import type { AppTheme } from '../context/themeContextData';
 

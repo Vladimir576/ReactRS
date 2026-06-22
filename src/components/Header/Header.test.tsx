@@ -1,16 +1,36 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { NextIntlClientProvider } from 'next-intl';
 import Header from './Header';
 import { ThemeProvider } from '../../context/ThemeContext';
+
+const messages = {
+  nav: {
+    home: 'Home',
+    about: 'About',
+  },
+  header: {
+    subtitle: 'Powered by React',
+    title: 'Character Search',
+    description: 'Use the search field to find information about the character you are interested in.',
+  },
+  theme: {
+    label: 'Theme',
+    light: 'Light',
+    dark: 'Dark',
+  },
+  errors: {
+    trigger: 'Simulate App Error',
+  },
+};
 
 describe('Header', () => {
   it('renders page title and error button', () => {
     render(
-      <ThemeProvider>
-        <MemoryRouter>
-          <Header onTriggerError={vi.fn()} />
-        </MemoryRouter>
-      </ThemeProvider>
+      <NextIntlClientProvider messages={messages} locale="en">
+        <ThemeProvider>
+          <Header onTriggerError={() => {}} />
+        </ThemeProvider>
+      </NextIntlClientProvider>
     );
 
     expect(screen.getByRole('heading', { name: 'Character Search' })).toBeInTheDocument();

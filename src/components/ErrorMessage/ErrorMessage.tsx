@@ -1,3 +1,5 @@
+'use client';
+
 import './ErrorMessage.css';
 
 interface ErrorMessageProps {

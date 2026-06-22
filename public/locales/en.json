@@ -1,0 +1,45 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About"
+  },
+  "header": {
+    "subtitle": "Powered by React",
+    "title": "Character Search",
+    "description": "Use the search field to find information about the character you are interested in."
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "errors": {
+    "trigger": "Simulate App Error",
+    "loadFailed": "Failed to load items. Please try again.",
+    "itemNotFound": "Item was not found."
+  },
+  "search": {
+    "placeholder": "Search character...",
+    "button": "Search"
+  },
+  "details": {
+    "refresh": "Refresh",
+    "refreshing": "Refreshing...",
+    "close": "Close",
+    "loading": "Loading details..."
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page"
+  },
+  "export": {
+    "csv": "Export as CSV",
+    "exporting": "Exporting..."
+  },
+  "about": {
+    "title": "About this app",
+    "description": "An application created using React and main tools. Created by Vladimir",
+    "courseLink": "RS School React course"
+  }
+}

@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router-dom';
 import Main from './Main';
 import { items } from '../../test-utils/items';
 
@@ -11,18 +10,16 @@ const defaultProps = {
   errorMessage: '',
   items,
   page: 1,
-  hasDetails: false,
+  selectedItemId: null,
   onSearch: vi.fn(),
   onRetry: vi.fn(),
   onPageChange: vi.fn(),
+  onSelectItem: vi.fn(),
+  onCloseDetails: vi.fn(),
 };
 
 function renderMain(props = defaultProps) {
-  return render(
-    <MemoryRouter>
-      <Main {...props} />
-    </MemoryRouter>
-  );
+  return render(<Main {...props} />);
 }
 
 describe('Main', () => {
@@ -58,9 +55,9 @@ describe('Main', () => {
       onPageChange,
     });
 
-    await user.click(screen.getByRole('button', { name: 'Next' }));
+    await user.click(screen.getByRole('button', { name: /next/i }));
 
     expect(onPageChange).toHaveBeenCalledWith(2);
-    expect(screen.getByRole('button', { name: 'Previous' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /previous/i })).toBeDisabled();
   });
 });

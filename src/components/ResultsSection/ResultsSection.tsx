@@ -1,3 +1,5 @@
+'use client';
+
 import type { Item } from '../../types/types';
 import CardList from '../CardList/CardList';
 import Pagination from '../Pagination/Pagination';
@@ -11,6 +13,7 @@ interface ResultsSectionProps {
   refreshing: boolean;
   onRetry: () => void;
   onPageChange: (page: number) => void;
+  onSelectItem: (itemId: number) => void;
 }
 
 export default function ResultsSection({
@@ -21,6 +24,7 @@ export default function ResultsSection({
   refreshing,
   onRetry,
   onPageChange,
+  onSelectItem,
 }: ResultsSectionProps) {
   const hasItems = items.length > 0;
 
@@ -43,7 +47,7 @@ export default function ResultsSection({
         onRetry={onRetry}
       >
         {hasItems ? (
-          <CardList items={items} />
+          <CardList items={items} onSelectItem={onSelectItem} />
         ) : (
           <div className="status-panel status-empty">
             <p>No results found.</p>

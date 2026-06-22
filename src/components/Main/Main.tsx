@@ -1,7 +1,9 @@
-import { Outlet } from 'react-router-dom';
+'use client';
+
 import type { Item } from '../../types/types';
 import ResultsSection from '../ResultsSection/ResultsSection';
 import SearchSection from '../SearchSection/SearchSection';
+import Details from '../../pages/Details';
 import './Main.css';
 
 interface MainProps {
@@ -11,10 +13,12 @@ interface MainProps {
   errorMessage: string;
   items: Item[];
   page: number;
-  hasDetails: boolean;
+  selectedItemId: number | null;
   onSearch: (searchTerm: string) => void;
   onRetry: () => void;
   onPageChange: (page: number) => void;
+  onSelectItem: (itemId: number) => void;
+  onCloseDetails: () => void;
 }
 
 export default function Main({
@@ -24,13 +28,15 @@ export default function Main({
   errorMessage,
   items,
   page,
-  hasDetails,
+  selectedItemId,
   onSearch,
   onRetry,
   onPageChange,
+  onSelectItem,
+  onCloseDetails,
 }: MainProps) {
   return (
-    <main className={`main-content ${hasDetails ? 'main-content-split' : ''}`}>
+    <main className={`main-content ${selectedItemId ? 'main-content-split' : ''}`}>
       <div className="main-left">
         <SearchSection
           searchTerm={searchTerm}
@@ -45,11 +51,16 @@ export default function Main({
           refreshing={refreshing}
           onRetry={onRetry}
           onPageChange={onPageChange}
+          selectedItemId={selectedItemId}
+          onSelectItem={onSelectItem}
         />
       </div>
-      {hasDetails && (
+      {selectedItemId && (
         <section className="details-section">
-          <Outlet />
+          <Details
+            itemId={selectedItemId}
+            onClose={onCloseDetails}
+          />
         </section>
       )}
     </main>

@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { useState, type ChangeEvent, type SyntheticEvent } from 'react';
 import './Search.css';
 
@@ -9,6 +12,7 @@ interface SearchProps {
 
 export default function Search({ value, loading, onSearch }: SearchProps) {
   const [inputValue, setInputValue] = useState(value);
+  const t = useTranslations();
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
     setInputValue(event.target.value);
@@ -22,7 +26,7 @@ export default function Search({ value, loading, onSearch }: SearchProps) {
   return (
     <form className="search-form" onSubmit={handleSubmit} noValidate>
       <label className="visually-hidden" htmlFor="search-input">
-        Search items
+        {t('search.placeholder')}
       </label>
       <input
         id="search-input"
@@ -30,11 +34,11 @@ export default function Search({ value, loading, onSearch }: SearchProps) {
         type="search"
         value={inputValue}
         onChange={handleInputChange}
-        placeholder="Search for items..."
+        placeholder={t('search.placeholder')}
         disabled={loading}
       />
       <button className="search-button" type="submit" disabled={loading}>
-        Search
+        {t('search.button')}
       </button>
     </form>
   );

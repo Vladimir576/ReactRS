@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import Search from '../Search/Search';
 
 interface SearchSectionProps {
@@ -11,6 +14,8 @@ export default function SearchSection({
   loading,
   onSearch,
 }: SearchSectionProps) {
+  useTranslations();
+
   return (
     <section className="search-section">
       <div className="search-header">

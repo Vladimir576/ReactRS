@@ -1,5 +1,8 @@
-import { NavLink } from 'react-router-dom';
-import { useThemeContext } from '../../context/useThemeContext';
+'use client';
+
+import { useLocale, useTranslations } from 'next-intl';
+import { useRouter, usePathname } from '@/i18n/navigation';
+import { useThemeContext } from '@/src/context/useThemeContext';
 import './Header.css';
 
 interface HeaderProps {
@@ -8,29 +11,51 @@ interface HeaderProps {
 
 export default function Header({ onTriggerError }: HeaderProps) {
   const { theme, changeTheme } = useThemeContext();
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
+  const t = useTranslations();
+
+  const handleLocaleChange = (newLocale: string) => {
+    if (newLocale !== locale) {
+      const newPathname = pathname.replace(/^\/[a-z]{2}/, '');
+      router.push(newPathname || '/', { locale: newLocale });
+    }
+  };
 
   return (
     <header className="app-header">
       <div className="page-title">
-        <p className="subtitle">Powered by React</p>
-        <h1>Character Search</h1>
-        <p className="main-title">
-        Use the search field to find information about the character you are interested in.
-        </p>
+        <p className="subtitle">{t('header.subtitle')}</p>
+        <h1>{t('header.title')}</h1>
+        <p className="main-title">{t('header.description')}</p>
       </div>
       <div className="header-actions">
-        <nav className="main-nav" >
-          <NavLink to="/">Home</NavLink>
-          <NavLink to="/about">About</NavLink>
+        <nav className="main-nav">
+          <a href={`/${locale}`}>{t('nav.home')}</a>
+          <a href={`/${locale}/about`}>{t('nav.about')}</a>
         </nav>
+        <div className="locale-select">
+          <label htmlFor="locale-picker">Language</label>
+          <select
+            id="locale-picker"
+            value={locale}
+            onChange={(event) => handleLocaleChange(event.target.value)}
+          >
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+        </div>
         <label className="theme-select-label">
-          Theme
+          {t('theme.label')}
           <select
             value={theme}
-            onChange={(event) => changeTheme(event.target.value as typeof theme)}
+            onChange={(event) =>
+              changeTheme(event.target.value as typeof theme)
+            }
           >
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
+            <option value="light">{t('theme.light')}</option>
+            <option value="dark">{t('theme.dark')}</option>
           </select>
         </label>
         <button
@@ -38,7 +63,7 @@ export default function Header({ onTriggerError }: HeaderProps) {
           className="error-trigger"
           onClick={onTriggerError}
         >
-          Simulate App Error
+          {t('errors.trigger')}
         </button>
       </div>
     </header>

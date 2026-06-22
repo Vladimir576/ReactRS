@@ -1,5 +1,6 @@
+'use client';
+
 import type { KeyboardEvent } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import type { Item } from '../../types/types';
 import {
   selectItems,
@@ -11,18 +12,12 @@ import './CardList.css';
 
 interface CardListProps {
   items: Item[];
+  onSelectItem: (itemId: number) => void;
 }
 
-export default function CardList({ items }: CardListProps) {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+export default function CardList({ items, onSelectItem }: CardListProps) {
   const selectedItems = useSelectedItemsStore(selectItems);
   const toggleSelectedItem = useSelectedItemsStore(selectToggleItem);
-  const page = searchParams.get('page') || '1';
-
-  function openDetails(itemId: number) {
-    navigate(`/details/${itemId}?page=${page}`);
-  }
 
   function handleCardKeyDown(event: KeyboardEvent<HTMLDivElement>, itemId: number) {
     if (event.target !== event.currentTarget) {
@@ -31,7 +26,7 @@ export default function CardList({ items }: CardListProps) {
 
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      openDetails(itemId);
+      onSelectItem(itemId);
     }
   }
 
@@ -43,7 +38,7 @@ export default function CardList({ items }: CardListProps) {
             role="button"
             tabIndex={0}
             className="card-button"
-            onClick={() => openDetails(item.id)}
+            onClick={() => onSelectItem(item.id)}
             onKeyDown={(event) => handleCardKeyDown(event, item.id)}
           >
             <Card

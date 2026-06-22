@@ -1,3 +1,6 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import './Pagination.css';
 
 interface PaginationProps {
@@ -6,6 +9,8 @@ interface PaginationProps {
 }
 
 export default function Pagination({ page, onPageChange }: PaginationProps) {
+  const t = useTranslations();
+
   return (
     <div className="pagination">
       <button
@@ -13,11 +18,13 @@ export default function Pagination({ page, onPageChange }: PaginationProps) {
         onClick={() => onPageChange(page - 1)}
         disabled={page <= 1}
       >
-        Previous
+        {t('pagination.previous')}
       </button>
-      <span>Page {page}</span>
+      <span>
+        {t('pagination.page')} {page}
+      </span>
       <button type="button" onClick={() => onPageChange(page + 1)}>
-        Next
+        {t('pagination.next')}
       </button>
     </div>
   );

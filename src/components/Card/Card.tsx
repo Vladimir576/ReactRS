@@ -1,3 +1,5 @@
+'use client';
+
 import type { MouseEvent } from 'react';
 import type { Item } from '../../types/types';
 import './Card.css';

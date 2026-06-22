@@ -1,11 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link } from '@/i18n/navigation';
 
 export default function NotFound() {
   return (
     <main className="simple-page">
       <h2>404</h2>
       <p>Page was not found.</p>
-      <Link to="/?page=1">Back to the app</Link>
+      <Link href="/">Back to the app</Link>
     </main>
   );
 }
